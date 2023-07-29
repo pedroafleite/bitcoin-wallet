@@ -1,4 +1,4 @@
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> anyhow::Result<()> {
     println!("Hello, world!");
     dotenv::from_filename(".env").ok();
 
