@@ -2,12 +2,14 @@
 
 In the Bitcoin Development Kit (BDK), wpkh stands for “Witness Public Key Hash”. It is a descriptor that represents a pay-to-witness-public-key-hash (P2WPKH) output script. The wpkh descriptor is used to create a new wallet in BDK. To create a wallet using the BDK descriptor, you can use the `bdk::Wallet::new` function. This is the example used in the code:
 
-`let _wallet = bdk::Wallet::new(
+```rust
+let _wallet = bdk::Wallet::new(
     &descriptor.clone(),
     None,
     bdk::bitcoin::Network::Testnet,
     bdk::database::MemoryDatabase::default(),
-);`
+);
+```
 
 The `bdk::Wallet::new` function takes four arguments:
 
