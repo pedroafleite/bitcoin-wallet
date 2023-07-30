@@ -1,12 +1,13 @@
 use bdk::{bitcoin::Network, database::MemoryDatabase, Wallet};
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("Hello, world!");
+fn setup() -> Result<String, Box<dyn std::error::Error>> {
     dotenv::from_filename(".env").ok();
-
     let descriptor: String = std::env::var("WALLET_DESCRIPTOR")?;
+    Ok(descriptor)
+}
 
-    println!("Descriptor: {}", descriptor);
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let descriptor = setup()?;
 
     let _wallet: Result<Wallet<MemoryDatabase>, bdk::Error> = Wallet::new(
         &descriptor, // &descriptor.clone();
