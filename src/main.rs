@@ -1,12 +1,20 @@
+use bdk::{bitcoin, database, MemoryDatabase, Network};
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Hello, world!");
     dotenv::from_filename(".env").ok();
 
-    let descriptor = std::env::var("WALLET_DESCRIPTOR")?;  
+    let descriptor = std::env::var("WALLET_DESCRIPTOR")?;
 
     println!("Descriptor: {}", descriptor);
     dbg!(descriptor);
 
-    Ok(())
+    let wallet = bdk::Wallet::new(
+        descriptor.into(),
+        None,
+        bdk::bitcoin::Network::Testnet,
+        MemoryDatabase,
+    );
 
+    Ok(())
 }
