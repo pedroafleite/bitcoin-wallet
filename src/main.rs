@@ -5,7 +5,9 @@ use std::path::Path;
 use axum::response::IntoResponse;
 use axum::response::Response;
 use axum::http::{StatusCode};
+use axum::Json;
 
+#[derive(serde::Serialize)]
 struct AddressResponse {
     address: String,
     index: u32,
@@ -49,7 +51,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 async fn handler() -> Result<impl IntoResponse, AppError> {
-    Ok(Html("<h1>Hello, World!</h1>"))
+    let response = AddressResponse{
+        address: "test".to_string(),
+        index: 0
+    };
+
+    Ok(Json(response))
 }
 
 struct AppError(anyhow::Error);
