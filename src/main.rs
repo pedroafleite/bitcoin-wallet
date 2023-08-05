@@ -1,5 +1,5 @@
-use bdk::{bitcoin::Network, database::MemoryDatabase, Wallet};
-// use std::path::Path;
+use bdk::{bitcoin::Network, database::SqliteDatabase, Wallet};
+use std::path::Path;
 
 fn setup() -> Result<String, Box<dyn std::error::Error>> {
     dotenv::from_filename(".env").ok();
@@ -10,14 +10,14 @@ fn setup() -> Result<String, Box<dyn std::error::Error>> {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let descriptor = setup()?;
 
-    // let my_path: &Path = Path::new("./bitcoin_wallet.db");
+    let my_path: &Path = Path::new("bitcoin_wallet.db");
+    // let conn = Connection::open(my_path)?;
 
-    let _wallet: Result<Wallet<MemoryDatabase>, bdk::Error> = Wallet::new(
-        &descriptor, // &descriptor.clone();
+    let _wallet: Result<Wallet<SqliteDatabase>, bdk::Error> = Wallet::new(
+        &descriptor,
         None,
         Network::Testnet,
-        // SqliteDatabase::new("./bitcoin_wallet.db"),
-        MemoryDatabase::default(),
+        SqliteDatabase::new(&my_path),
     );
 
     let address: Result<bdk::wallet::AddressInfo, bdk::Error> =

@@ -6,5 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bdk = "0.28.0"
+bdk = { version = "0.28.0", features = ["sqlite"] }
 dotenv = "0.15.0"
