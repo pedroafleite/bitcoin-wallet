@@ -2,6 +2,14 @@ use axum::{response::Html, routing::get, Router};
 use bdk::{bitcoin::Network, database::SqliteDatabase, Wallet};
 use std::net::SocketAddr;
 use std::path::Path;
+use axum::response::IntoResponse;
+use axum::response::Response;
+use axum::http::{StatusCode};
+
+struct AddressResponse {
+    address: String,
+    index: u32,
+}
 
 fn setup() -> Result<String, Box<dyn std::error::Error>> {
     dotenv::from_filename(".env").ok();
@@ -30,12 +38,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = Router::new().route("/", get(handler));
 
     // run it
-    // let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
-    //     .await
-    //     .unwrap();
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     println!("listening on {}", addr);
-    // axum::serve(listener, app).await.unwrap();
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
@@ -44,10 +48,30 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-// async fn main() {
+async fn handler() -> Result<impl IntoResponse, AppError> {
+    Ok(Html("<h1>Hello, World!</h1>"))
+}
 
-// }
+struct AppError(anyhow::Error);
 
-async fn handler() -> Html<&'static str> {
-    Html("<h1>Hello, World!</h1>")
+// Tell axum how to convert `AppError` into a response.
+impl IntoResponse for AppError {
+    fn into_response(self) -> Response {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Something went wrong: {}", self.0),
+        )
+            .into_response()
+    }
+}
+
+// This enables using `?` on functions that return `Result<_, anyhow::Error>` to turn them into
+// `Result<_, AppError>`. That way you don't need to do that manually.
+impl<E> From<E> for AppError
+where
+    E: Into<anyhow::Error>,
+{
+    fn from(err: E) -> Self {
+        Self(err.into())
+    }
 }
