@@ -11,7 +11,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let descriptor = setup()?;
 
     let my_path: &Path = Path::new("bitcoin_wallet.db");
-    // let conn = Connection::open(my_path)?;
 
     let _wallet: Result<Wallet<SqliteDatabase>, bdk::Error> = Wallet::new(
         &descriptor,
@@ -22,7 +21,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let address: Result<bdk::wallet::AddressInfo, bdk::Error> =
         _wallet?.get_address(bdk::wallet::AddressIndex::New);
-
     dbg!(address)?;
 
     Ok(())
